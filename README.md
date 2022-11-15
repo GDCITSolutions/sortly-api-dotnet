@@ -9,7 +9,7 @@ The Sortly .NET API is [available on NuGet](https://www.nuget.org/packages/Sortl
 
 ```
 
-dotnet add package SortlyApi
+dotnet add package Sortly.Api
 
 ```
 
