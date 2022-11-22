@@ -5,6 +5,7 @@ using Sortly.Api.Http;
 using Sortly.Api.Model.Request;
 using Sortly.Api.Model.Response;
 using Sortly.Api.Model.Sortly;
+using System.Text;
 using System.Text.Json;
 
 namespace Sortly.Api.Client
@@ -71,7 +72,8 @@ namespace Sortly.Api.Client
         {
             Guard.ArgumentIsNotNull(alert, "Alert is required");
 
-            var response = await _api.Post(Route.Alerts, JsonSerializer.Serialize(alert));
+            var content = new StringContent(JsonSerializer.Serialize(alert), Encoding.UTF8, "application/json");
+            var response = await _api.Post(Route.Alerts, content);
 
             return await ProcessResponse<AlertResponse>(response);
         }
@@ -80,7 +82,8 @@ namespace Sortly.Api.Client
         {
             Guard.ArgumentIsNotNull(alert, "Alert is required");
 
-            var response = await _api.Put($"{Route.Alerts}/{id}", JsonSerializer.Serialize(alert));
+            var content = new StringContent(JsonSerializer.Serialize(alert), Encoding.UTF8, "application/json");
+            var response = await _api.Put($"{Route.Alerts}/{id}", content);
 
             return await ProcessResponse<AlertResponse>(response);
         }

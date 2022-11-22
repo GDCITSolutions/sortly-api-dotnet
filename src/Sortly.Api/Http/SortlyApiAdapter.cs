@@ -8,11 +8,11 @@ namespace Sortly.Api.Http
     {
         Task<HttpResponseMessage> Get(string path);
 
-        Task<HttpResponseMessage> Post(string path, string bodyJson);
+        Task<HttpResponseMessage> Post(string path, HttpContent content);
 
         Task<HttpResponseMessage> Delete(string path);
 
-        Task<HttpResponseMessage> Put(string path, string bodyJson);
+        Task<HttpResponseMessage> Put(string path, HttpContent content);
     }
 
     public class SortlyApiAdapter : ISortlyApiAdapter
@@ -43,17 +43,13 @@ namespace Sortly.Api.Http
             return await BuildClient().GetAsync(path);
         }
 
-        public async Task<HttpResponseMessage> Post(string path, string bodyJson)
+        public async Task<HttpResponseMessage> Post(string path, HttpContent content)
         {
-            var content = new StringContent(bodyJson, Encoding.UTF8, "application/json");
-
             return await BuildClient().PostAsync(path, content);
         }
 
-        public async Task<HttpResponseMessage> Put(string path, string bodyJson)
+        public async Task<HttpResponseMessage> Put(string path, HttpContent content)
         {
-            var content = new StringContent(bodyJson, Encoding.UTF8, "application/json");
-
             return await BuildClient().PutAsync(path, content);
         }
 

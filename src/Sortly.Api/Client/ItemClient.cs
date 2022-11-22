@@ -5,6 +5,7 @@ using Sortly.Api.Http;
 using Sortly.Api.Model.Request;
 using Sortly.Api.Model.Response;
 using Sortly.Api.Model.Sortly;
+using System.Text;
 using System.Text.Json;
 
 namespace Sortly.Api.Client
@@ -18,7 +19,7 @@ namespace Sortly.Api.Client
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        Task<ItemResponse> CreateItem(CreateItemRequest item);
+        Task<ItemResponse> CreateItem(CreateItemRequest request);
 
         /// <summary>
         /// Get a single item in Sortly.
@@ -89,7 +90,7 @@ namespace Sortly.Api.Client
         /// <param name="id"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-        Task<EmptyResponse> UpdateItem(int id, UpdateItemRequest item);
+        Task<EmptyResponse> UpdateItem(int id, UpdateItemRequest request);
 
         /// <summary>
         /// Search for items.
@@ -104,12 +105,14 @@ namespace Sortly.Api.Client
     public class ItemClient : BaseClient, IItemClient
     {
         private readonly ISortlyApiAdapter _api;
+        private readonly IPayloadResolver _payloadResolver;
 
-        public ItemClient(ISortlyApiAdapter api) : base()
+        public ItemClient(ISortlyApiAdapter api, IPayloadResolver payloadResolver) : base()
         {
-            Guard.ArgumentsAreNotNull(api);
+            Guard.ArgumentsAreNotNull(api, payloadResolver);
 
             _api = api;
+            _payloadResolver = payloadResolver;
         }
 
         public async Task<ItemResponse> GetItem(int id, GetItemRequest request)
@@ -119,12 +122,12 @@ namespace Sortly.Api.Client
             return await ProcessResponse<ItemResponse>(response);
         }
 
-        public async Task<ItemResponse> CreateItem(CreateItemRequest item)
+        public async Task<ItemResponse> CreateItem(CreateItemRequest request)
         {
-            Guard.ArgumentIsNotNull(item, "CreateItemRequest is required");
-            item.Validate();
+            Guard.ArgumentIsNotNull(request, "CreateItemRequest is required");
+            request.Validate();
 
-            var response = await _api.Post(Route.Items, JsonSerializer.Serialize(item));
+            var response = await _api.Post(Route.Items, _payloadResolver.ResolveMultiPart(request));
 
             return await ProcessResponse<ItemResponse>(response);
         }
@@ -134,7 +137,8 @@ namespace Sortly.Api.Client
             Guard.ArgumentIsNotNull(request, "MoveItemRequest is required");
             request.Validate();
 
-            var response = await _api.Post($"{Route.Items}/{id}/move", JsonSerializer.Serialize(request));
+            var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            var response = await _api.Post($"{Route.Items}/{id}/move", content);
 
             return await ProcessResponse<ItemResponse>(response);
         }
@@ -143,17 +147,18 @@ namespace Sortly.Api.Client
         {
             Guard.ArgumentIsNotNull(request, "CloneItemRequest is required");
 
-            var response = await _api.Post($"{Route.Items}/{id}/copy", JsonSerializer.Serialize(request));
+            var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            var response = await _api.Post($"{Route.Items}/{id}/copy", content);
 
             return await ProcessResponse<ItemResponse>(response);
         }
 
-        public async Task<EmptyResponse> UpdateItem(int id, UpdateItemRequest item)
+        public async Task<EmptyResponse> UpdateItem(int id, UpdateItemRequest request)
         {
-            Guard.ArgumentIsNotNull(item, "UpdateItemRequest is required");
-            item.Validate();
+            Guard.ArgumentIsNotNull(request, "UpdateItemRequest is required");
+            request.Validate();
 
-            var response = await _api.Put($"{Route.Items}/{id}", JsonSerializer.Serialize(item));
+            var response = await _api.Put($"{Route.Items}/{id}", _payloadResolver.ResolveMultiPart(request));
 
             return await ProcessNoContentResponse(response);
         }

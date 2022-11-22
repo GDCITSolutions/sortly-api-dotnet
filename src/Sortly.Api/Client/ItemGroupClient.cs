@@ -1,12 +1,9 @@
 ﻿using Sortly.Api.Client.Base;
 using Sortly.Api.Common.Constants;
-using Sortly.Api.Common.File;
 using Sortly.Api.Common.Util;
 using Sortly.Api.Http;
 using Sortly.Api.Model.Request;
 using Sortly.Api.Model.Response;
-using Sortly.Api.Model.Sortly;
-using System.Text.Json;
 
 namespace Sortly.Api.Client
 {
@@ -19,7 +16,7 @@ namespace Sortly.Api.Client
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<ListItemGroupsResponse> CreateItemGroup(CreateItemGroupRequest request);
+        Task<ItemGroupResponse> CreateItemGroup(CreateItemGroupRequest request);
 
         /// <summary>
         /// Get a list of item groups.
@@ -48,7 +45,7 @@ namespace Sortly.Api.Client
         /// <param name="id"></param>
         /// <param name="group"></param>
         /// <returns></returns>
-        Task<ItemGroupResponse> UpdateItemGroup(Guid id, ItemGroup group);
+        Task<ItemGroupResponse> UpdateItemGroup(Guid id, UpdateItemGroupRequest request);
 
         /// <summary>
         /// Delete an item group.
@@ -63,22 +60,24 @@ namespace Sortly.Api.Client
     public class ItemGroupClient : BaseClient, IItemGroupClient
     {
         private readonly ISortlyApiAdapter _api;
+        private readonly IPayloadResolver _payloadResolver;
 
-        public ItemGroupClient(ISortlyApiAdapter api) : base()
+        public ItemGroupClient(ISortlyApiAdapter api, IPayloadResolver payloadResolver) : base()
         {
-            Guard.ArgumentsAreNotNull(api);
+            Guard.ArgumentsAreNotNull(api, payloadResolver);
 
             _api = api;
+            _payloadResolver = payloadResolver;
         }
 
-        public async Task<ListItemGroupsResponse> CreateItemGroup(CreateItemGroupRequest request)
+        public async Task<ItemGroupResponse> CreateItemGroup(CreateItemGroupRequest request)
         {
             Guard.ArgumentIsNotNull(request, "CreateItemGroupRequest is required");
             request.Validate();
 
-            var response = await _api.Post(Route.ItemGroups, JsonSerializer.Serialize(request));
+            var response = await _api.Post(Route.ItemGroups, _payloadResolver.ResolveMultiPart(request));
 
-            return await ProcessResponse<ListItemGroupsResponse>(response);
+            return await ProcessResponse<ItemGroupResponse>(response);
         }
 
         public async Task<ListItemGroupsResponse> ListItemGroups(ListItemGroupsRequest request)
@@ -95,13 +94,13 @@ namespace Sortly.Api.Client
             return await ProcessResponse<ItemGroupResponse>(response);
         }
 
-        public async Task<ItemGroupResponse> UpdateItemGroup(Guid id, ItemGroup group)
+        public async Task<ItemGroupResponse> UpdateItemGroup(Guid id, UpdateItemGroupRequest request)
         {
             // TODO: why is update not like create with a wrapping dto?
-            Guard.ArgumentIsNotNull(group, "ItemGroup is required");
-            group.Validate();
+            Guard.ArgumentIsNotNull(request, "UpdateItemGroupRequest is required");
+            request.Validate();
 
-            var response = await _api.Put($"{Route.ItemGroups}/{id}", JsonSerializer.Serialize(group));
+            var response = await _api.Put($"{Route.ItemGroups}/{id}", _payloadResolver.ResolveMultiPart(request));
 
             return await ProcessResponse<ItemGroupResponse>(response);
         }
