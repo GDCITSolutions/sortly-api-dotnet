@@ -1,4 +1,5 @@
-﻿using Sortly.Api.Common.Util;
+﻿using Sortly.Api.Common.File;
+using Sortly.Api.Common.Util;
 using Sortly.Api.Http;
 
 namespace Sortly.Api.Client
@@ -42,8 +43,8 @@ namespace Sortly.Api.Client
 
             Alert = new AlertClient(api);
             CustomField = new CustomFieldClient(api);
-            Item = new ItemClient(api);
-            ItemGroup = new ItemGroupClient(api);
+            Item = new ItemClient(api, new PayloadResolver(new FileAdapter()));
+            ItemGroup = new ItemGroupClient(api, new PayloadResolver(new FileAdapter()));
             UnitsOfMeasure = new UnitsOfMeasureClient(api);
         }
 

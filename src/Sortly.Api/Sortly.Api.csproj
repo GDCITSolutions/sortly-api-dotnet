@@ -3,13 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Company>GDC IT Solutions</Company>
-    <Version>1.0.0</Version>
-    <Description>
-     Open source library for v1 of the Sortly API. This library provides a programmable interface for .NET based languages (C# and VB.NET).
-    </Description>
-    <RepositoryUrl>https://github.com/GDCITSolutions/sortly-api-dotnet.git</RepositoryUrl> 
-    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
