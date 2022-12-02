@@ -35,7 +35,7 @@ namespace Sortly.Test.Clients
         }
 
         [Test]
-        public void ListCustomFields_Request_Response_Failure()
+        public void ListUnitsOfMeasure_Request_Response_Failure()
         {
             Assert.Fail();
         }
