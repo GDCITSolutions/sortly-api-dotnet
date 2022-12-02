@@ -1,6 +1,6 @@
 ﻿namespace Sortly.Api.Common.Constants
 {
-    internal static class SortlyHeaders
+    public static class SortlyHeaders
     {
         public static string RateLimitMax = "Sortly-Rate-Limit-Max";
         public static string RateLimitRemaining = "Sortly-Rate-Limit-Remaining";
