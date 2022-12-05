@@ -31,6 +31,10 @@ namespace Sortly.Test.Clients.Concrete
             _api = api;
         }
 
+        /// <summary>
+        /// Method used for testing <see cref="BaseClient.ProcessResponse{T}(HttpResponseMessage)"/>
+        /// </summary>
+        /// <returns></returns>
         public async Task<ItemResponse> TestProcessReponse()
         {
             var response = await _api.Get("");
@@ -38,6 +42,10 @@ namespace Sortly.Test.Clients.Concrete
             return await ProcessResponse<ItemResponse>(response);
         }
 
+        /// <summary>
+        /// Method used for testing <see cref="BaseClient.ProcessNoContentResponse(HttpResponseMessage)"/>
+        /// </summary>
+        /// <returns></returns>
         public async Task<EmptyResponse> TestProcessEmptyReponse()
         {
             var response = await _api.Get("");
