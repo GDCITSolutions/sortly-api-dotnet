@@ -1,5 +1,6 @@
 ﻿using Moq;
 using NUnit.Framework;
+using Sortly.Api.Client.Base;
 using Sortly.Api.Common.Constants;
 using Sortly.Api.Common.Exceptions;
 using Sortly.Api.Http;
@@ -11,11 +12,17 @@ using System.Text.Json;
 
 namespace Sortly.Test.Clients
 {
+    /// <summary>
+    /// All tests related to <see cref="BaseClient"/> through <see cref="TestBaseClient"/>
+    /// </summary>
     [TestFixture]
     public class BaseClientTest
     {
         private Mock<ISortlyApiAdapter> _mockApi;
 
+        /// <summary>
+        /// Every time tests are executed, setup mock objects
+        /// </summary>
         [SetUp]
         public void Setup()
         {
@@ -43,6 +50,9 @@ namespace Sortly.Test.Clients
             return response;
         }
 
+        /// <summary>
+        /// Test that some request payload is successfully read and parsed
+        /// </summary>
         [Test]
         public void ProcessResponse_Success()
         {
@@ -67,6 +77,9 @@ namespace Sortly.Test.Clients
             });
         }
 
+        /// <summary>
+        /// Test that an exception is thrown if an unsuccessful status code is read from the response
+        /// </summary>
         [Test]
         public void ProcessResponse_Error_Response()
         {
@@ -83,6 +96,9 @@ namespace Sortly.Test.Clients
             Assert.ThrowsAsync<SortlyApiException>(() => Client.TestProcessReponse());
         }
 
+        /// <summary>
+        /// Test that some request payload is successfully read and parsed
+        /// </summary>
         [Test]
         public void ProcessNoContentResponse_Success()
         {
@@ -100,6 +116,9 @@ namespace Sortly.Test.Clients
             });
         }
 
+        /// <summary>
+        /// Test that an exception is thrown if an unsuccessful status code is read from the response
+        /// </summary>
         [Test]
         public void ProcessNoContentResponse_Error_Response()
         {
