@@ -231,7 +231,6 @@ namespace Sortly.Test.Clients
         #endregion
 
         #region CloneItem Tests
-
         /// <summary>
         /// Test CloneItem that executes successfully end-to-end
         /// </summary>

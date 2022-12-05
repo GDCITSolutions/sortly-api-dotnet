@@ -13,7 +13,6 @@ namespace Sortly.Test.Clients
     [TestFixture]
     public class ItemGroupClientTest
     {
-
         /// <summary>
         /// Every time tests are executed, setup mock objects
         /// </summary>
@@ -24,7 +23,7 @@ namespace Sortly.Test.Clients
         }
 
         #region Constructor Tests
-
+        
         /// <summary>
         /// Test that the constructor executes successfully given mock dependencies
         /// </summary>
@@ -33,7 +32,7 @@ namespace Sortly.Test.Clients
         {
             Assert.Fail();
         }
-
+        
         /// <summary>
         /// Test that given a null api reference, the constructor throws
         /// </summary>
@@ -68,7 +67,7 @@ namespace Sortly.Test.Clients
         #endregion
 
         #region CreateItemGroup
-
+        
         /// <summary>
         /// Test CreateItemGroup that executes successfully end-to-end
         /// </summary>
@@ -144,6 +143,7 @@ namespace Sortly.Test.Clients
         /// <summary>
         /// <see cref="ItemGroupAttributeOption.Name"/> fails validation and throws an exception
         /// </summary>
+
         [Test]
         public void CreateItemGroup_Validation_Failure_Attribute_Option_Name()
         {

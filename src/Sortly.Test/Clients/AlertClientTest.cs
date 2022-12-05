@@ -57,7 +57,7 @@ namespace Sortly.Test.Clients
         {
             Assert.Fail();
         }
-
+        
         /// <summary>
         /// Test CreateAlert from end to end with no exceptions thrown
         /// </summary>
@@ -66,7 +66,7 @@ namespace Sortly.Test.Clients
         {
             Assert.Fail();
         }
-
+        
         /// <summary>
         /// Test CreateAlert throws when not provided an alert
         /// </summary>

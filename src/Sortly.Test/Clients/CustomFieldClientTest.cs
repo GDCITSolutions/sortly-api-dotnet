@@ -16,6 +16,7 @@ namespace Sortly.Test.Clients
         /// <summary>
         /// Every time tests are executed, setup mock objects
         /// </summary>
+
         [SetUp]
         public void Setup() 
         {
@@ -39,8 +40,7 @@ namespace Sortly.Test.Clients
         {
             Assert.Fail();
         }
-
-
+        
         /// <summary>
         /// Test ListCustomFields with an object that resolves to a query string with no exceptions thrown
         /// </summary>
@@ -49,7 +49,6 @@ namespace Sortly.Test.Clients
         {
             Assert.Fail();
         }
-
 
         /// <summary>
         /// Test ListCustomFields with an object that resolves to an empty query string with no exceptions thrown

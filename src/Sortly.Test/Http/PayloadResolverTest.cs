@@ -18,7 +18,7 @@ namespace Sortly.Test.Clients
         {
 
         }
-
+        
         /// <summary>
         /// Test that the constructor executes successfully given mock dependencies
         /// </summary>
@@ -42,6 +42,7 @@ namespace Sortly.Test.Clients
         /// <summary>
         /// Given that there are no photos in CreateItemRequest, serialize the entity to JSON 
         /// </summary>
+
         [Test]
         public void ResolveMultiPart_CreateItemRequest_NoPhotos()
         {
@@ -96,7 +97,7 @@ namespace Sortly.Test.Clients
         {
             Assert.Fail();
         }
-
+        
         /// <summary>
         /// Given that there are photos in UpdateItemRequest, verify that a file will be loaded if the photo type is of "Path"
         /// </summary>
