@@ -31,27 +31,6 @@ namespace Sortly.Test.Clients
         }
 
         /// <summary>
-        /// Build a <see cref="HttpResponseMessage"/> with headers and content
-        /// </summary>
-        /// <param name="body"></param>
-        /// <param name="status"></param>
-        /// <returns></returns>
-        private HttpResponseMessage BuildResponse(object body, HttpStatusCode status)
-        {
-            var response = new HttpResponseMessage
-            {
-                Content = new StringContent(JsonSerializer.Serialize(body)),
-                StatusCode = status
-            };
-
-            response.Headers.Add(SortlyHeaders.RateLimitMax, "1000");
-            response.Headers.Add(SortlyHeaders.RateLimitRemaining, "10");
-            response.Headers.Add(SortlyHeaders.RateLimitReset, "2000");
-
-            return response;
-        }
-
-        /// <summary>
         /// Test that the constructor executes successfully given mock dependencies
         /// </summary>
         [Test]
@@ -75,18 +54,26 @@ namespace Sortly.Test.Clients
         [Test]
         public void ListUnitsOfMeasure_Success()
         {
-            var unitOfMeasure = new UnitOfMeasure();
+           
+            var testList = new List<UnitOfMeasure>() { new UnitOfMeasure { PrettyName = "Some Pretty Name", PrettyUnit = "Some Pretty Unit", Scale = 1, UnitName = "Some Unit Name", UnitType = "Some Unit Type" } };
 
-            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(BuildResponse(unitOfMeasure, HttpStatusCode.OK));
-
-            var testingResponse = Client.TestProcessEmptyReponse().Result;
-
-            Assert.Multiple(() =>
+            var testHttpResponseMessage = new HttpResponseMessage
             {
-                Assert.That(testingResponse.RateLimit.Max, Is.EqualTo(1000));
-                Assert.That(testingResponse.RateLimit.Remaining, Is.EqualTo(10));
-                Assert.That(testingResponse.RateLimit.Reset, Is.EqualTo(2000));
-            });
+                Content = new StringContent(JsonSerializer.Serialize(testList)),
+                StatusCode = HttpStatusCode.OK,
+            };
+
+            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
+            var unitOfMeasureClient = new UnitsOfMeasureClient(_mockApi.Object);
+            var result = unitOfMeasureClient.ListUnitsOfMeasure().Result;
+
+            Assert.That(result, Is.InstanceOf<List<UnitOfMeasure>>());
+            Assert.That(result.Count, Is.EqualTo(testList.Count));
+            Assert.That(result[0].PrettyName, Is.EqualTo("Some Pretty Name"));
+            Assert.That(result[0].PrettyUnit, Is.EqualTo("Some Pretty Unit"));
+            Assert.That(result[0].Scale, Is.EqualTo(1));
+            Assert.That(result[0].UnitName, Is.EqualTo("Some Unit Name"));
+            Assert.That(result[0].UnitType, Is.EqualTo("Some Unit Type"));
         }
 
         /// <summary>
@@ -95,14 +82,18 @@ namespace Sortly.Test.Clients
         [Test]
         public void ListUnitsOfMeasure_Request_Response_Failure()
         {
-            var unitOfMeasure = new UnitOfMeasure();
+            var testHttpResponseMessage = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.BadRequest,
+            };
 
-            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(BuildResponse(unitOfMeasure, HttpStatusCode.BadRequest));
+            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
+            var unitOfMeasureClient = new UnitsOfMeasureClient(_mockApi.Object);
+            var result = unitOfMeasureClient.ListUnitsOfMeasure();
 
-            Assert.ThrowsAsync<SortlyApiException>(() => Client.TestProcessEmptyReponse());
+            Assert.That(result, Is.InstanceOf<List<UnitOfMeasure>>());
+            Assert.ThrowsAsync<SortlyApiException>(() => result);
         }
-
-        private TestBaseClient Client { get { return new TestBaseClient(_mockApi.Object); } }
 
     }
 }
