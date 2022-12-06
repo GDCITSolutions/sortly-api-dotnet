@@ -1,7 +1,15 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using NUnit.Framework;
 using Sortly.Api.Client;
 using Sortly.Api.Http;
+using Sortly.Api.Common.Constants;
+using Sortly.Api.Model.Sortly;
+using System.Net;
+using System.Text.Json;
+using Sortly.Test.Clients.Concrete;
+using Sortly.Api.Model.Response;
+using Sortly.Api.Common.Exceptions;
 
 namespace Sortly.Test.Clients
 {
@@ -17,9 +25,30 @@ namespace Sortly.Test.Clients
         /// Every time tests are executed, setup mock objects
         /// </summary>
         [SetUp]
-        public void Setup() 
+        public void Setup()
         {
             _mockApi = new Mock<ISortlyApiAdapter>();
+        }
+
+        /// <summary>
+        /// Build a <see cref="HttpResponseMessage"/> with headers and content
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        private HttpResponseMessage BuildResponse(object body, HttpStatusCode status)
+        {
+            var response = new HttpResponseMessage
+            {
+                Content = new StringContent(JsonSerializer.Serialize(body)),
+                StatusCode = status
+            };
+
+            response.Headers.Add(SortlyHeaders.RateLimitMax, "1000");
+            response.Headers.Add(SortlyHeaders.RateLimitRemaining, "10");
+            response.Headers.Add(SortlyHeaders.RateLimitReset, "2000");
+
+            return response;
         }
 
         /// <summary>
@@ -28,16 +57,16 @@ namespace Sortly.Test.Clients
         [Test]
         public void Constructor_Success()
         {
-            Assert.Fail();
+            Assert.DoesNotThrow(() => new UnitsOfMeasureClient(_mockApi.Object));
         }
 
         /// <summary>
         /// Test that given a null api reference, the constructor throws
         /// </summary>
         [Test]
-        public void Constructor_Fail_Api() 
+        public void Constructor_Fail_Api()
         {
-            Assert.Fail();
+            Assert.Throws<ArgumentNullException>(() => new UnitsOfMeasureClient(null));
         }
 
         /// <summary>
@@ -46,7 +75,18 @@ namespace Sortly.Test.Clients
         [Test]
         public void ListUnitsOfMeasure_Success()
         {
-            Assert.Fail();
+            var unitOfMeasure = new UnitOfMeasure();
+
+            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(BuildResponse(unitOfMeasure, HttpStatusCode.OK));
+
+            var testingResponse = Client.TestProcessEmptyReponse().Result;
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(testingResponse.RateLimit.Max, Is.EqualTo(1000));
+                Assert.That(testingResponse.RateLimit.Remaining, Is.EqualTo(10));
+                Assert.That(testingResponse.RateLimit.Reset, Is.EqualTo(2000));
+            });
         }
 
         /// <summary>
@@ -55,7 +95,14 @@ namespace Sortly.Test.Clients
         [Test]
         public void ListUnitsOfMeasure_Request_Response_Failure()
         {
-            Assert.Fail();
+            var unitOfMeasure = new UnitOfMeasure();
+
+            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(BuildResponse(unitOfMeasure, HttpStatusCode.BadRequest));
+
+            Assert.ThrowsAsync<SortlyApiException>(() => Client.TestProcessEmptyReponse());
         }
+
+        private TestBaseClient Client { get { return new TestBaseClient(_mockApi.Object); } }
+
     }
 }
