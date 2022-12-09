@@ -1,7 +1,15 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using NUnit.Framework;
 using Sortly.Api.Client;
 using Sortly.Api.Http;
+using Sortly.Api.Common.Constants;
+using Sortly.Api.Model.Sortly;
+using System.Net;
+using System.Text.Json;
+using Sortly.Test.Clients.Concrete;
+using Sortly.Api.Model.Response;
+using Sortly.Api.Common.Exceptions;
 
 namespace Sortly.Test.Clients
 {
@@ -17,7 +25,7 @@ namespace Sortly.Test.Clients
         /// Every time tests are executed, setup mock objects
         /// </summary>
         [SetUp]
-        public void Setup() 
+        public void Setup()
         {
             _mockApi = new Mock<ISortlyApiAdapter>();
         }
@@ -28,16 +36,16 @@ namespace Sortly.Test.Clients
         [Test]
         public void Constructor_Success()
         {
-            Assert.Fail();
+            Assert.DoesNotThrow(() => new UnitsOfMeasureClient(_mockApi.Object));
         }
 
         /// <summary>
         /// Test that given a null api reference, the constructor throws
         /// </summary>
         [Test]
-        public void Constructor_Fail_Api() 
+        public void Constructor_Fail_Api()
         {
-            Assert.Fail();
+            Assert.Throws<ArgumentNullException>(() => new UnitsOfMeasureClient(null));
         }
 
         /// <summary>
@@ -46,7 +54,26 @@ namespace Sortly.Test.Clients
         [Test]
         public void ListUnitsOfMeasure_Success()
         {
-            Assert.Fail();
+           
+            var testList = new List<UnitOfMeasure>() { new UnitOfMeasure { PrettyName = "Some Pretty Name", PrettyUnit = "Some Pretty Unit", Scale = 1, UnitName = "Some Unit Name", UnitType = "Some Unit Type" } };
+
+            var testHttpResponseMessage = new HttpResponseMessage
+            {
+                Content = new StringContent(JsonSerializer.Serialize(testList)),
+                StatusCode = HttpStatusCode.OK,
+            };
+
+            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
+            var unitOfMeasureClient = new UnitsOfMeasureClient(_mockApi.Object);
+            var result = unitOfMeasureClient.ListUnitsOfMeasure().Result;
+
+            Assert.That(result, Is.InstanceOf<List<UnitOfMeasure>>());
+            Assert.That(result.Count, Is.EqualTo(testList.Count));
+            Assert.That(result[0].PrettyName, Is.EqualTo("Some Pretty Name"));
+            Assert.That(result[0].PrettyUnit, Is.EqualTo("Some Pretty Unit"));
+            Assert.That(result[0].Scale, Is.EqualTo(1));
+            Assert.That(result[0].UnitName, Is.EqualTo("Some Unit Name"));
+            Assert.That(result[0].UnitType, Is.EqualTo("Some Unit Type"));
         }
 
         /// <summary>
@@ -55,7 +82,18 @@ namespace Sortly.Test.Clients
         [Test]
         public void ListUnitsOfMeasure_Request_Response_Failure()
         {
-            Assert.Fail();
+            var testHttpResponseMessage = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.BadRequest,
+            };
+
+            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
+            var unitOfMeasureClient = new UnitsOfMeasureClient(_mockApi.Object);
+            var result = unitOfMeasureClient.ListUnitsOfMeasure();
+
+            Assert.That(result, Is.InstanceOf<List<UnitOfMeasure>>());
+            Assert.ThrowsAsync<SortlyApiException>(() => result);
         }
+
     }
 }
