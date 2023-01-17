@@ -186,7 +186,9 @@ namespace Sortly.Api.Client
 
         public async Task<ListItemsResponse> SearchItems(SearchItemsRequest request)
         {
-            var response = await _api.Get($"{Route.SearchItems}{request?.AsQueryString() ?? ""}");
+            // api is configured to accept both a query string and a request body
+            var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            var response = await _api.Post($"{Route.SearchItems}{request?.AsQueryString() ?? ""}", content);
 
             return await ProcessResponse<ListItemsResponse>(response);
         }

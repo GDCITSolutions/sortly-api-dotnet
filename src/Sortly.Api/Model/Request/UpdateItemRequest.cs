@@ -2,12 +2,12 @@
 using Sortly.Api.Common.Exceptions;
 using Sortly.Api.Common.File;
 using Sortly.Api.Model.Abstractions;
-using Sortly.Api.Model.Request;
+using Sortly.Api.Model.Sortly;
 using System.Text.Json;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace Sortly.Api.Model.Sortly
+namespace Sortly.Api.Model.Request
 {
     public class UpdateItemRequest : IValidatable, IPhotoRequest
     {
@@ -136,6 +136,10 @@ namespace Sortly.Api.Model.Sortly
 
             if (ItemGroupId == null && OptionValueIds?.Length > 0)
                 throw new SortlyValidationException("Option value ids are defined but there is no item group id set");
+
+            if (CustomAttributeValues?.Length > 0)
+                foreach (var cav in CustomAttributeValues)
+                    cav.Validate();
         }
 
         public HttpContent AsHttpPayload(IFileAdapter fileSystem)

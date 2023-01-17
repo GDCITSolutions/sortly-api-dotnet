@@ -35,6 +35,13 @@ namespace Sortly.Api.Client.Base
             };
         }
 
+        /// <summary>
+        /// Process a Sortly API response where some body content is expected
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        /// <exception cref="SortlyApiException"></exception>
         protected async Task<T> ProcessResponse<T>(HttpResponseMessage response) where T : BaseResponse
         {
             var content = await response.Content.ReadAsStringAsync();

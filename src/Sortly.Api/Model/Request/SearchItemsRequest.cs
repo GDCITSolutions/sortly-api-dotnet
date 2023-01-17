@@ -1,6 +1,7 @@
 ﻿using Sortly.Api.Common.Constants;
 using Sortly.Api.Common.Util;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Sortly.Api.Model.Request
 {
@@ -21,6 +22,7 @@ namespace Sortly.Api.Model.Request
             FolderIds = folderIds ?? new List<string>();
         }
 
+        [JsonPropertyName("name")]
         public string Name { get; private set; }
 
         public string Type { get; private set; }
@@ -30,6 +32,7 @@ namespace Sortly.Api.Model.Request
         /// 
         /// Note, only name sorting is supported at the moment
         /// </summary>
+        [JsonPropertyName("sort")]
         public IDictionary<string, string> Sort { get; private set; } = new Dictionary<string, string>();
 
         public Guid? ItemGroupId { get; private set; }
@@ -38,6 +41,7 @@ namespace Sortly.Api.Model.Request
 
         public int? Page { get; private set; }
 
+        [JsonPropertyName("folder_ids")]
         public IList<string> FolderIds { get; private set; } = new List<string>();
 
         public IList<string> Include { get; private set; } = new List<string>();
@@ -148,19 +152,10 @@ namespace Sortly.Api.Model.Request
             if (Type != null)
                 parameters += StringHelpers.FormatQueryParameterAddition(parameters, $"type={Type}");
 
-            if (Name != null)
-                parameters += StringHelpers.FormatQueryParameterAddition(parameters, $"name={Name}");
-
-            // api is expecting a json array in the query string
-            if (FolderIds.Count > 0)
-                parameters += StringHelpers.FormatQueryParameterAddition(parameters, $"folder_ids={JsonSerializer.Serialize(FolderIds)}");
-
-            // api is expecting json in the query string
-            if (Sort.Count > 0)
-                parameters += StringHelpers.FormatQueryParameterAddition(parameters, $"sort={JsonSerializer.Serialize(Sort)}");
-
             if (Include.Count > 0)
                 parameters += StringHelpers.FormatQueryParameterAddition(parameters, $"include={string.Join(',', Include)}");
+
+            // some parameters are expected to be serialized as JSON in a payload
 
             return parameters;
         }
