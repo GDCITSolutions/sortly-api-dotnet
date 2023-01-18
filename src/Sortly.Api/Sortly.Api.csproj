@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Authors>Justin Rebok</Authors>
     <Company>GDC IT Solutions</Company>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Description>
      Open source library for v1 of the Sortly API. This library provides a programmable interface for .NET based languages (C# and VB.NET).
     </Description>
