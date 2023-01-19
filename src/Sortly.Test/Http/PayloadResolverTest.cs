@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using Sortly.Api.Http;
+using Sortly.Api.Model.Abstractions;
 
 namespace Sortly.Test.Clients
 {
@@ -33,6 +34,15 @@ namespace Sortly.Test.Clients
         /// </summary>
         [Test]
         public void Constructor_Fail_FileAdapter()
+        {
+            Assert.Fail();
+        }
+
+        /// <summary>
+        /// Ensure that <see cref="IPhotoRequest.AsHttpPayload"/> is called on the parameter object
+        /// to return a valid HTTP payload
+        /// </summary>
+        public void ResolveMultiPart_AsHttpPayload_Executes() 
         {
             Assert.Fail();
         }

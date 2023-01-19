@@ -1,5 +1,5 @@
-﻿using Sortly.Api.Common.File;
-using Sortly.Api.Model.Request;
+﻿using Sortly.Api.Model.Request;
+using System.IO.Abstractions;
 
 namespace Sortly.Api.Model.Abstractions
 {
@@ -16,6 +16,6 @@ namespace Sortly.Api.Model.Abstractions
         /// </summary>
         /// <param name="_fileSystem"></param>
         /// <returns></returns>
-        public HttpContent AsHttpPayload(IFileAdapter _fileSystem);
+        public HttpContent AsHttpPayload(IFileSystem _fileSystem);
     }
 }

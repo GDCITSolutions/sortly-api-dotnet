@@ -1,6 +1,6 @@
-﻿using Sortly.Api.Common.File;
-using Sortly.Api.Common.Util;
+﻿using Sortly.Api.Common.Util;
 using Sortly.Api.Http;
+using System.IO.Abstractions;
 
 namespace Sortly.Api.Client
 {
@@ -43,8 +43,8 @@ namespace Sortly.Api.Client
 
             Alert = new AlertClient(api);
             CustomField = new CustomFieldClient(api);
-            Item = new ItemClient(api, new PayloadResolver(new FileAdapter()));
-            ItemGroup = new ItemGroupClient(api, new PayloadResolver(new FileAdapter()));
+            Item = new ItemClient(api, new PayloadResolver(new FileSystem()));
+            ItemGroup = new ItemGroupClient(api, new PayloadResolver(new FileSystem()));
             UnitsOfMeasure = new UnitsOfMeasureClient(api);
         }
 

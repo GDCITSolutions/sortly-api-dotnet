@@ -1,8 +1,8 @@
 ﻿using Sortly.Api.Common.Enums;
 using Sortly.Api.Common.Exceptions;
-using Sortly.Api.Common.File;
 using Sortly.Api.Model.Abstractions;
 using Sortly.Api.Model.Sortly;
+using System.IO.Abstractions;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -190,7 +190,7 @@ namespace Sortly.Api.Model.Request
                     cav.Validate();
         }
 
-        public HttpContent AsHttpPayload(IFileAdapter fileSystem) 
+        public HttpContent AsHttpPayload(IFileSystem fileSystem) 
         {
             if (!Photos?.Any(x => x.PhotoRequestType == PhotoRequestType.Path) ?? true)
                 return new StringContent(JsonSerializer.Serialize(this), Encoding.UTF8, "application/json");
@@ -241,7 +241,7 @@ namespace Sortly.Api.Model.Request
             {
                 if (p.PhotoRequestType == PhotoRequestType.Path)
                 {
-                    var file = fileSystem.ReadAllBytes(p.Content);
+                    var file = fileSystem.File.ReadAllBytes(p.Content);
 
                     form.Add(new ByteArrayContent(file, 0, file.Length), $"{JSON_PHOTOS}[]", Path.GetFileName(p.Content));
                 }
