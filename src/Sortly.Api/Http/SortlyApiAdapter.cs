@@ -1,17 +1,38 @@
 ﻿using Sortly.Api.Common.Util;
 using Sortly.Api.Configuration;
-using System.Text;
 
 namespace Sortly.Api.Http
 {
     public interface ISortlyApiAdapter
     {
+        /// <summary>
+        /// Call a GET endpoint of Sortly
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         Task<HttpResponseMessage> Get(string path);
 
+        /// <summary>
+        /// Call a POST endpoint of Sortly
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
         Task<HttpResponseMessage> Post(string path, HttpContent content);
 
+        /// <summary>
+        /// Call a DELETE endpoint of Sortly
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         Task<HttpResponseMessage> Delete(string path);
 
+        /// <summary>
+        /// Call a PUT endpoint of Sortly
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
         Task<HttpResponseMessage> Put(string path, HttpContent content);
     }
 

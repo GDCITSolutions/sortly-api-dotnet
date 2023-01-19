@@ -2,10 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sortly.Api.Client;
-using Sortly.Api.Common.File;
 using Sortly.Api.Configuration;
 using Sortly.Api.Http;
 using Sortly.Api.Model.Request;
+using System.IO.Abstractions;
 
 const string API = "Api";
 const string API_KEY = "Key";
@@ -24,7 +24,7 @@ static IHostBuilder CreateHostBuilder(string[] args)
         .ConfigureServices((context, services) =>
         {
             services.AddHttpClient();
-            services.AddSingleton<IFileAdapter, FileAdapter>();
+            services.AddSingleton<IFileSystem, FileSystem>();
             services.AddSingleton<ISortlyApiAdapter, SortlyApiAdapter>();
             services.AddSingleton<ISortlyClient, SortlyClient>();
 
