@@ -28,7 +28,7 @@ namespace Sortly.Test.Clients
         [Test]
         public void Constructor_Success()
         {
-
+            Assert.DoesNotThrow(() => new SortlyClient(_mockApi.Object));
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Sortly.Test.Clients
         [Test]
         public void Constructor_Failure()
         {
-
+            Assert.Throws<ArgumentNullException>(() => new SortlyClient(null));
         }
 
         /// <summary>
@@ -46,7 +46,16 @@ namespace Sortly.Test.Clients
         [Test]
         public void Sub_Clients_Are_Defined()
         {
+            var client = new SortlyClient(_mockApi.Object);
 
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(client.Alert);
+                Assert.NotNull(client.CustomField);
+                Assert.NotNull(client.Item);
+                Assert.NotNull(client.ItemGroup);
+                Assert.NotNull(client.UnitsOfMeasure);
+            });
         }
     }
 }
