@@ -1,8 +1,10 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using NUnit.Framework;
 using Sortly.Api.Client;
 using Sortly.Api.Http;
 using Sortly.Api.Model.Request;
+using Sortly.Api.Model.Response;
 using Sortly.Api.Model.Sortly;
 
 namespace Sortly.Test.Clients
@@ -13,13 +15,20 @@ namespace Sortly.Test.Clients
     [TestFixture]
     public class ItemGroupClientTest
     {
+        #region Mocks
+        private Mock<ISortlyApiAdapter> _mockApi;
+        private Mock<IPayloadResolver> _mockPayloadResolver;
+
+        #endregion
+
         /// <summary>
         /// Every time tests are executed, setup mock objects
         /// </summary>
         [SetUp]
         public void Setup() 
         {
-
+            _mockApi = new Mock<ISortlyApiAdapter>();
+            _mockPayloadResolver = new Mock<IPayloadResolver>();
         }
 
         #region Constructor Tests
@@ -30,7 +39,7 @@ namespace Sortly.Test.Clients
         [Test]
         public void Constructor_Success()
         {
-            Assert.Fail();
+          Assert.DoesNotThrow(()=> new ItemGroupClient(_mockApi.Object, _mockPayloadResolver.Object));
         }
         
         /// <summary>
@@ -38,8 +47,8 @@ namespace Sortly.Test.Clients
         /// </summary>
         [Test]
         public void Constructor_Fail_Api() 
-        {
-            Assert.Fail();
+        { 
+          Assert.Throws<ArgumentNullException>(()=> new ItemGroupClient(null, _mockPayloadResolver.Object));
         }
 
         #endregion
@@ -52,7 +61,24 @@ namespace Sortly.Test.Clients
         [Test]
         public void ListItemGroups_Success_With_Query_String()
         {
-            Assert.Fail();
+
+            var testHttpResponseMessage = new HttpResponseMessage
+            {
+                StatusCode = System.Net.HttpStatusCode.OK
+            };
+
+            var testList = new ListItemGroupsResponse()
+            {
+
+            };
+
+            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
+            var itemGroupClient = new ItemGroupClient(_mockApi.Object, _mockPayloadResolver.Object);
+
+            Mock<ListItemGroupsRequest> request = new Mock<ListItemGroupsRequest>();
+
+            //Assert.DoesNotThrowAsync(() => new ItemGroupClient(_mockApi.Object, _mockPayloadResolver.Object).ListItemGroups());
+
         }
 
         /// <summary>
@@ -61,7 +87,16 @@ namespace Sortly.Test.Clients
         [Test]
         public void ListItemGroups_Success_Empty_Query_String()
         {
-            Assert.Fail();
+               var testHttpResponseMessage = new HttpResponseMessage
+            {
+                StatusCode = System.Net.HttpStatusCode.OK
+            };
+
+            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
+
+            Mock<ListItemGroupsRequest> request = new Mock<ListItemGroupsRequest>();
+
+            Assert.DoesNotThrowAsync(() => new ItemGroupClient(_mockApi.Object, _mockPayloadResolver.Object).ListItemGroups(request.Object));
         }
 
         #endregion
@@ -83,7 +118,14 @@ namespace Sortly.Test.Clients
         [Test]
         public void CreateItemGroup_Null_Request()
         {
-            Assert.Fail();
+            var testHttpResponseMessage = new HttpResponseMessage
+            {
+                StatusCode = System.Net.HttpStatusCode.OK
+            };
+            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
+
+
+            Assert.ThrowsAsync<ArgumentNullException>(() => new ItemGroupClient(_mockApi.Object, _mockPayloadResolver.Object).CreateItemGroup(null));
         }
 
         /// <summary>
@@ -279,6 +321,12 @@ namespace Sortly.Test.Clients
         {
             Assert.Fail();
         }
+
+        #endregion
+
+        #region Setup Helpers
+       
+
 
         #endregion
     }
