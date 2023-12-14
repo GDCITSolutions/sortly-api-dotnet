@@ -86,7 +86,7 @@ namespace Sortly.Api.Model.Request
             if ((Attributes?.Length ?? 0) == 0)
                 throw new SortlyValidationException("At least one attribute is required");
 
-            for (int i = 0; i < Attributes.Length - 1; i++)
+            for (int i = 0; i < Attributes.Length; i++)
             {
                 var attribute = Attributes[i];
 
