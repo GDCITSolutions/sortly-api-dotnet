@@ -2,6 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using Sortly.Api.Client;
+using Sortly.Api.Common.Constants;
 using Sortly.Api.Common.Exceptions;
 using Sortly.Api.Http;
 using Sortly.Api.Model.Request;
@@ -64,21 +65,8 @@ namespace Sortly.Test.Clients
         public void ListItemGroups_Success_With_Query_String()
         {
 
-            var testHttpResponseMessage = new HttpResponseMessage
-            {
-                StatusCode = System.Net.HttpStatusCode.OK
-            };
-
-            var testList = new ListItemGroupsResponse()
-            {
-
-            };
-
-            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
-
-
-            //Assert.DoesNotThrowAsync(() => new ItemGroupClient(_mockApi.Object, _mockPayloadResolver.Object).ListItemGroups());
             Assert.Fail();
+            
         }
 
         /// <summary>
@@ -87,16 +75,7 @@ namespace Sortly.Test.Clients
         [Test]
         public void ListItemGroups_Success_Empty_Query_String()
         {
-               var testHttpResponseMessage = new HttpResponseMessage
-            {
-                StatusCode = System.Net.HttpStatusCode.OK
-            };
-
-            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
-
-            Mock<ListItemGroupsRequest> request = new Mock<ListItemGroupsRequest>();
-
-            Assert.DoesNotThrowAsync(() => new ItemGroupClient(_mockApi.Object, _mockPayloadResolver.Object).ListItemGroups(request.Object));
+            Assert.Fail();
         }
 
         #endregion
@@ -109,41 +88,7 @@ namespace Sortly.Test.Clients
         [Test]
         public void CreateItemGroup_Success()
         {
-            var testHttpResponseMessage = new HttpResponseMessage
-            {
-                StatusCode = System.Net.HttpStatusCode.OK
-            };
-            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
-
-
-            var request = new CreateItemGroupRequest()
-            {
-                ItemGroup = new SubCreateItemGroupRequest()
-                {
-                    Name = "name",
-                    SortlyId = "id",
-                    Attributes = new ItemGroupAttribute[]
-                    {
-                        new ItemGroupAttribute {
-                            Id = Guid.NewGuid(), 
-                            Name = "name", 
-                            Order = 2,
-                            Options = new ItemGroupAttributeOption[]
-                            {
-                                new ItemGroupAttributeOption
-                                {
-                                    Id = Guid.NewGuid(),
-                                    Name = "name",
-                                    Order = 3,
-                                }
-                            }
-                        }
-                    }  
-                }
-            };
-
-            
-            Assert.DoesNotThrowAsync(() => new ItemGroupClient(_mockApi.Object, _mockPayloadResolver.Object).CreateItemGroup(request));
+            Assert.Fail();
         }
 
         /// <summary>
@@ -152,12 +97,6 @@ namespace Sortly.Test.Clients
         [Test]
         public void CreateItemGroup_Null_Request()
         {
-            var testHttpResponseMessage = new HttpResponseMessage
-            {
-                StatusCode = System.Net.HttpStatusCode.OK
-            };
-            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
-
             Assert.ThrowsAsync<ArgumentNullException>(() => new ItemGroupClient(_mockApi.Object, _mockPayloadResolver.Object).CreateItemGroup(null));
         }
 
@@ -167,11 +106,6 @@ namespace Sortly.Test.Clients
         [Test]
         public void CreateItemGroup_Validation_Failure_Null_ItemGroup()
         {
-            var testHttpResponseMessage = new HttpResponseMessage
-            {
-                StatusCode = System.Net.HttpStatusCode.OK
-            };
-            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
 
             var request = new CreateItemGroupRequest()
             {
@@ -190,11 +124,6 @@ namespace Sortly.Test.Clients
         [Test]
         public void CreateItemGroup_Validation_Failure_Name()
         {
-            var testHttpResponseMessage = new HttpResponseMessage
-            {
-                StatusCode = System.Net.HttpStatusCode.OK
-            };
-            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
 
             var request = new CreateItemGroupRequest()
             {
@@ -221,12 +150,7 @@ namespace Sortly.Test.Clients
         [Test]
         public void CreateItemGroup_Validation_Failure_Attributes()
         {
-            var testHttpResponseMessage = new HttpResponseMessage
-            {
-                StatusCode = System.Net.HttpStatusCode.OK
-            };
-            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
-
+            
             var request = new CreateItemGroupRequest()
             {
                 ItemGroup = new SubCreateItemGroupRequest()
@@ -245,12 +169,7 @@ namespace Sortly.Test.Clients
         [Test]
         public void CreateItemGroup_Validation_Failure_Attribute_Name()
         {
-            var testHttpResponseMessage = new HttpResponseMessage
-            {
-                StatusCode = System.Net.HttpStatusCode.OK
-            };
-            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
-
+            
             var request = new CreateItemGroupRequest()
             {
                 ItemGroup = new SubCreateItemGroupRequest()
@@ -286,12 +205,7 @@ namespace Sortly.Test.Clients
         [Test]
         public void CreateItemGroup_Validation_Failure_Attribute_Order()
         {
-            var testHttpResponseMessage = new HttpResponseMessage
-            {
-                StatusCode = System.Net.HttpStatusCode.OK
-            };
-            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
-
+           
             var request = new CreateItemGroupRequest()
             {
                 ItemGroup = new SubCreateItemGroupRequest()
@@ -327,12 +241,7 @@ namespace Sortly.Test.Clients
         [Test]
         public void CreateItemGroup_Validation_Failure_Attribute_Options()
         {
-            var testHttpResponseMessage = new HttpResponseMessage
-            {
-                StatusCode = System.Net.HttpStatusCode.OK
-            };
-            _mockApi.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(testHttpResponseMessage);
-
+            
             var request = new CreateItemGroupRequest()
             {
                 ItemGroup = new SubCreateItemGroupRequest()
@@ -364,7 +273,34 @@ namespace Sortly.Test.Clients
         [Test]
         public void CreateItemGroup_Validation_Failure_Attribute_Option_Name()
         {
-            Assert.Fail();
+           
+            var request = new CreateItemGroupRequest()
+            {
+                ItemGroup = new SubCreateItemGroupRequest()
+                {
+                    Name = "name",
+                    SortlyId = "id",
+                    Attributes = new ItemGroupAttribute[]
+                    {
+                        new ItemGroupAttribute {
+                            Id = Guid.NewGuid(),
+                            Name = "name1",
+                            Order = 2,
+                            Options = new ItemGroupAttributeOption[]
+                            {
+                                new ItemGroupAttributeOption
+                                {
+                                    Id = Guid.NewGuid(),
+                                    Name = null,
+                                    Order = 4
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            Assert.ThrowsAsync<SortlyValidationException>(() => new ItemGroupClient(_mockApi.Object, _mockPayloadResolver.Object).CreateItemGroup(request));
         }
 
         /// <summary>
@@ -373,7 +309,34 @@ namespace Sortly.Test.Clients
         [Test]
         public void CreateItemGroup_Validation_Failure_Attribute_Option_Order()
         {
-            Assert.Fail();
+           
+            var request = new CreateItemGroupRequest()
+            {
+                ItemGroup = new SubCreateItemGroupRequest()
+                {
+                    Name = "name",
+                    SortlyId = "id",
+                    Attributes = new ItemGroupAttribute[]
+                    {
+                        new ItemGroupAttribute {
+                            Id = Guid.NewGuid(),
+                            Name = "name1",
+                            Order = 2,
+                            Options = new ItemGroupAttributeOption[]
+                            {
+                                new ItemGroupAttributeOption
+                                {
+                                    Id = Guid.NewGuid(),
+                                    Name = "name3",
+                                    Order = null
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            Assert.ThrowsAsync<SortlyValidationException>(() => new ItemGroupClient(_mockApi.Object, _mockPayloadResolver.Object).CreateItemGroup(request));
         }
 
         #endregion
@@ -498,11 +461,6 @@ namespace Sortly.Test.Clients
         }
 
         #endregion
-
-        #region Setup Helpers
        
-
-
-        #endregion
     }
 }

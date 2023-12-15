@@ -99,7 +99,7 @@ namespace Sortly.Api.Model.Request
                 if ((attribute.Options?.Length ?? 0) == 0)
                     throw new SortlyValidationException($"Group attribute at index {i} - At least one option is required.");
 
-                for (int j = 0; j < attribute.Options.Length - 1; j++)
+                for (int j = 0; j < attribute.Options.Length; j++)
                 {
                     var option = attribute.Options[j];
 
